@@ -20,14 +20,14 @@ gh repo clone sdesabbata/torchgeodemo-pkg-dev
 cd torchgeodemo-pkg-dev
 
 # Install the package
-pip install .
+pip install torchgeodemo
 ```
 
 Alternatively, the package can be installed with the GPU dependencies if available and [RAPIDS](https://docs.rapids.ai/) for the clustering.
 
 ```bash
 # Install the package with RAPIDS dependencies
-pip install --extra-index-url=https://pypi.nvidia.com .[gpu]
+pip install --extra-index-url=https://pypi.nvidia.com torchgeodemo[gpu]
 ```
 
 
