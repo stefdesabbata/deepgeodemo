@@ -1,0 +1,4 @@
+site_name: TorchGeoDemo
+site_url: https://torchgeodemo.readthedocs.io
+theme:
+  name: material
