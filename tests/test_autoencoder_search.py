@@ -1,6 +1,6 @@
 import torch
 import pytest
-from torchgeodemo.autoencoder_search import (
+from deepgeodemo.autoencoder_search import (
     key_splitter,
     product_dict,
     generate_configs,

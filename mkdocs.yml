@@ -1,4 +1,4 @@
-site_name: TorchGeoDemo
-site_url: https://torchgeodemo.readthedocs.io
+site_name: DeepGeoDemo
+site_url: https://deepgeodemo.readthedocs.io
 theme:
   name: material

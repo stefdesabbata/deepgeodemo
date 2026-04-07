@@ -1,6 +1,6 @@
 import torch
 import pytest
-from torchgeodemo.models import MLP, AutoEncoder
+from deepgeodemo.models import MLP, AutoEncoder
 
 
 class TestMLP:

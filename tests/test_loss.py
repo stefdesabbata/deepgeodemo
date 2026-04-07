@@ -1,6 +1,6 @@
 import torch
 import pytest
-from torchgeodemo.loss import (
+from deepgeodemo.loss import (
     normalized_mean_squared_error,
     mean_absolute_error,
     normalized_L1_loss,

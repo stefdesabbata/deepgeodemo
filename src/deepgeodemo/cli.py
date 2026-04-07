@@ -6,7 +6,7 @@ from . import kmeans_sklearn
 from . import kmeans_sklearn_search
 
 def main():
-    parser = argparse.ArgumentParser(description='TorchGeodemo Command-Line Interface (CLI).')
+    parser = argparse.ArgumentParser(description='DeepGeodemo Command-Line Interface (CLI).')
     parser.add_argument('-t', '--train_ae', action='store_true', help='Train the autoencoder.')
     parser.add_argument('-l', '--latent', action='store_true', help='Create latent representation.')
     parser.add_argument('-c', '--cluster', action='store_true', help='Run clustering using k-means.')
@@ -19,7 +19,7 @@ def main():
 
     # Run the appropriate module
     # Train autoencoder
-    print("\nTorchGeodemo CLI")
+    print("\nDeepGeodemo CLI")
     # print(f"{args.train_ae=} {args.latent=}")
     if args.train_ae and args.latent:
         print("Training autoencoder and creating latent representation.")

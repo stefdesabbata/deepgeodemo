@@ -1,4 +1,4 @@
-from torchgeodemo import autoencoder_search
+from deepgeodemo import autoencoder_search
 
 # Base configuration for the autoencoder
 # these values will be the same for all configurations

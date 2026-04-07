@@ -1,8 +1,8 @@
-# TorchGeoDemo: Deep Embedding Geodemographics Made Simple
+# DeepGeoDemo: Deep Embedding Geodemographics Made Simple
 
 ## Overview
 
-TorchGeoDemo makes it easy to build geodemographic classifications powered by deep embeddings. Configure your autoencoder in a simple YAML file and run the full pipeline from the command line, or import TorchGeoDemo as a Python library when you need more control.
+DeepGeoDemo makes it easy to build geodemographic classifications powered by deep embeddings. Configure your autoencoder in a simple YAML file and run the full pipeline from the command line, or import DeepGeoDemo as a Python library when you need more control.
 
 
 
@@ -13,20 +13,20 @@ The package is currently under development and can be installed from the reposit
 Create a virtual environment, e.g. using conda.
 
 ```bash
-conda create -n torchgeodemo python=3.12
-conda activate torchgeodemo
+conda create -n deepgeodemo python=3.12
+conda activate deepgeodemo
 ```
 
 Install the package via `pip`.
 
 ```bash
-pip install torchgeodemo
+pip install deepgeodemo
 ```
 
 Alternatively, the package can be installed with the GPU dependencies if available and [RAPIDS](https://docs.rapids.ai/) for the clustering.
 
 ```bash
-pip install --extra-index-url=https://pypi.nvidia.com torchgeodemo[gpu]
+pip install --extra-index-url=https://pypi.nvidia.com deepgeodemo[gpu]
 ```
 
 
@@ -37,37 +37,37 @@ The commands below illustrate how to use the Command-Line Interface (CLI) to run
 Train the autoencoder.
 
 ```bash
-torchgeodemo -tv example/example.yml
+deepgeodemo -tv example/example.yml
 ```
 
 Create latent representation using on the previously trained autoencoder. Note that this will load a model from disk, and thus it will rais a warning message, as that can result in **arbitrary code execution**. Do it only if you got the file from a **trusted** source -- e.g., a model file you trained yourself, using the command above.
 
 ```bash
-torchgeodemo -lv example/example.yml
+deepgeodemo -lv example/example.yml
 ```
 
 Alternatively, you can train the autoencoder and create the latent representation in one go. In this case, the autoencoder will still be saved, but the latent representation will be created directly with the model in memory (rather than loading from the disk).
 
 ```bash
-torchgeodemo -tlv example/example.yml
+deepgeodemo -tlv example/example.yml
 ```
 
 Run clustering in test mode to search for best k. Add `-r` for RAPIDS backend, default is scikit-learn.
 
 ```bash
-torchgeodemo -sv example/example.yml
+deepgeodemo -sv example/example.yml
 ```
 
 Run clustering using k-means. Add `-r` for RAPIDS backend, default is scikit-learn.
 
 ```bash
-torchgeodemo -cv example/example.yml
+deepgeodemo -cv example/example.yml
 ```
 
 Alternatively, you can run everything in one go as well.
 
 ```bash
-torchgeodemo -tlscv example/example.yml
+deepgeodemo -tlscv example/example.yml
 ```
 
 For a more concrete example, you can test the tool using the 2021 OAC data available from [Jakub Wyszomierski's repo](https://github.com/jakubwyszomierski/OAC2021-2). Download the [Clean data](https://liveuclac-my.sharepoint.com/:f:/g/personal/zcfajwy_ucl_ac_uk/Eqd1EV2WgOFJmZ7kLx-oDYMBdxqNe9IJmli6M8S-e91F0g?e=M9wh5j) used to create the [2021 OAC](https://data.cdrc.ac.uk/dataset/output-area-classification-2021), unzip the file and set the value of `data: source` to the location of one of the file datasets on your computer. It is advisable to normalise the data before training the autoencoder, e.g., using min-max scaling. Please increase the number of epochs and the number of clustering iteration to get meaninful results.
@@ -80,8 +80,8 @@ If you want to run the unit tests, you can install the package in editable mode.
 
 ```bash
 # Clone the repository
-gh repo clone sdesabbata/torchgeodemo
-cd torchgeodemo
+gh repo clone stefdesabbata/deepgeodemo
+cd deepgeodemo
 
 # Install the package
 pip install -e .

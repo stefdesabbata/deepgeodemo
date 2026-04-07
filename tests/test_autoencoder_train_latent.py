@@ -1,5 +1,5 @@
 import pytest
-from torchgeodemo.autoencoder_train_latent import generate_ae_sizes
+from deepgeodemo.autoencoder_train_latent import generate_ae_sizes
 
 
 class TestGenerateAeSizes:

@@ -1,6 +1,6 @@
 import torch
 import pytest
-from torchgeodemo.activation import TopK, JumpReLU, _rectangle
+from deepgeodemo.activation import TopK, JumpReLU, _rectangle
 
 
 class TestTopK:
