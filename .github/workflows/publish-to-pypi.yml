@@ -1,6 +1,10 @@
 name: Publish Python 🐍 distribution 📦 to PyPI and TestPyPI
 
-on: push
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
 
 jobs:
   build:
@@ -32,7 +36,7 @@ jobs:
   publish-to-pypi:
     name: >-
       Publish Python 🐍 distribution 📦 to PyPI
-    if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
+    if: startsWith(github.ref, 'refs/tags/')
     needs:
     - build
     runs-on: ubuntu-latest
@@ -40,7 +44,7 @@ jobs:
       name: pypi
       url: https://pypi.org/p/torchgeodemo
     permissions:
-      id-token: write  # IMPORTANT: mandatory for trusted publishing
+      id-token: write
 
     steps:
     - name: Download all the dists
@@ -63,7 +67,7 @@ jobs:
       url: https://test.pypi.org/p/torchgeodemo
 
     permissions:
-      id-token: write  # IMPORTANT: mandatory for trusted publishing
+      id-token: write
 
     steps:
     - name: Download all the dists
