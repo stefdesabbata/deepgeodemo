@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "torchgeodemo"
+version = "0.1.0"
+description = "A library and CLI tool for geodemographic classification using deep autoencoders."
+keywords = ["geodemographic", "geodemographics", "autoencoders"]
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [
+  {name = "Stef De Sabbata", email = "s.desabbata@leicester.ac.uk"}
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Topic :: Scientific/Engineering :: GIS",
+  "Programming Language :: Python :: 3.12"
+]
+dependencies = [
+  "pyyaml>=6.0",
+  "numpy>=2.0",
+  "pandas>=2.2",
+  "scikit-learn>=1.5",
+  "torch>=2.4",
+  "torchvision",
+  "torchaudio",
+  "tensorboard>=2.18",
+  "lightning>=2.4",
+  "matplotlib>=3.9",
+  "seaborn>=0.13",
+  "clustergram>=0.8",
+  "pytest>=7.0"
+]
+
+[project.optional-dependencies]
+# Optional RAPIDS libraries
+gpu = [
+  "cudf-cu12>=24.10",
+  "cuml-cu12>=24.10"
+]
+
+[project.urls]
+Homepage = "https://sdesabbata.github.io/torchgeodemo/"
+Repository = "https://github.com/sdesabbata/torchgeodemo"
+
+[project.scripts]
+torchgeodemo = "torchgeodemo.cli:main"
+

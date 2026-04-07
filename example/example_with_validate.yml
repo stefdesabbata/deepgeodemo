@@ -1,0 +1,37 @@
+data:
+  source:    'example/example.csv'
+  nickname:  'example_geodemo'
+  id_col:    'ID'
+  exclude_cols:
+    - 'CL'
+working_dir: 'scratch'
+random_seed: 20210321
+autoencoder:
+  nickname:    'to4emb_val'
+  version:     '0_1'
+  save_latent: 'csv'
+  max_epochs: 300
+  batch_size: 0.01
+  validate:   0.20
+  encoder:
+    sizes:
+      - 8
+      - 4
+  decoder:
+    sizes:
+      - 4
+      - 8
+clustering:
+  nickname:      'test'
+  version:       '0_1'
+  test:  
+    from:        2
+    to:          20
+    n_init:      10
+    max_iter:    10
+  cluster:  
+    k:
+      - 8
+    n_init:         10
+    max_iter:       10
+    save_clusters: 'csv'
