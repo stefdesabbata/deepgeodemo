@@ -10,23 +10,22 @@ TorchGeoDemo makes it easy to build geodemographic classifications powered by de
 
 The package is currently under development and can be installed from the repository. The package requires Python 3.12. The package can be installed using the following commands. This will install the package with the CPU dependencies --- i.e., the cpu version of [PyTorch](https://pytorch.org/) and [scikit-learn](https://scikit-learn.org/stable/index.html) for clustering.
 
+Create a virtual environment, e.g. using conda.
+
 ```bash
-# Create a virtual environment, e.g. using conda
 conda create -n torchgeodemo python=3.12
 conda activate torchgeodemo
+```
 
-# Clone the repository
-gh repo clone sdesabbata/torchgeodemo-pkg-dev
-cd torchgeodemo-pkg-dev
+Install the package via `pip`.
 
-# Install the package
+```bash
 pip install torchgeodemo
 ```
 
 Alternatively, the package can be installed with the GPU dependencies if available and [RAPIDS](https://docs.rapids.ai/) for the clustering.
 
 ```bash
-# Install the package with RAPIDS dependencies
 pip install --extra-index-url=https://pypi.nvidia.com torchgeodemo[gpu]
 ```
 
@@ -80,6 +79,11 @@ For a more concrete example, you can test the tool using the 2021 OAC data avail
 If you want to run the unit tests, you can install the package in editable mode.
 
 ```bash
+# Clone the repository
+gh repo clone sdesabbata/torchgeodemo
+cd torchgeodemo
+
+# Install the package
 pip install -e .
 ```
 
