@@ -75,16 +75,17 @@ class AutoEncoder(L.LightningModule):
         encoder_sizes (list[int]): List of integers specifying the sizes of the encoder layers.
         encoder_sparse (bool, optional): If True, creates a sparse encoder. Default is False.
         encoder_sparse_topk_k (int, optional): If encoder_sparse is True, specifies the top-k sparsity constraint. Default is None.
-        encoder_activation (Literal["Identity", "ReLU", "Tanh", "Sigmoid"], optional): Final activation function for the encoder. Default is "Identity".
+        encoder_sparse_batch_norm (bool, optional): If encoder_sparse is True, whether to add a BatchNorm1d layer before the TopK activation. Default is False.
+        encoder_activation (Literal["Identity", "JumpReLU", "LeakyReLU", "ReLU", "Tanh", "Sigmoid"], optional): Final activation function for the encoder. If encoder_sparse is True, this activation is applied before the TopK selection. Default is "Identity".
         decoder_sizes (list[int], optional): List of integers specifying the sizes of the decoder layers. If None, the decoder sizes are set to be the reverse of encoder sizes. Default is None.
-        decoder_activation (Literal["Identity", "ReLU", "Tanh", "Sigmoid"], optional): Final activation function for the decoder. Default is "Identity".
+        decoder_activation (Literal["Identity", "JumpReLU", "LeakyReLU", "ReLU", "Tanh", "Sigmoid"], optional): Final activation function for the decoder. Default is "Identity".
         use_batch_norm (bool, optional): If True, adds batch normalization layers. Default is False.
-        loss_weight_latent_l0 (float, optional): Weight for the latent L0 loss. Default is 0.0.
-        loss_weight_latent_l1 (float, optional): Weight for the latent L1 loss if a sparse autoencoder is created. Default is 0.01.
-        loss_weight_covariance (float, optional): Weight for the covariance loss. Default is 0.0.
-        loss_weight_auxk (float, optional): Weight for the auxiliary TopK loss if a sparse autoencoder is created. Default is 0.0.
-        regu_weight_l2 (float, optional): Weight for L2 regularization. Default is 0.0.
-        regu_weight_l1 (float, optional): Weight for L1 regularization. Default is 0.0.
+        loss_latent_l1_weight (float, optional): Weight for the latent L1 loss. Only applied if greater than 0. Default is 0.0.
+        loss_latent_l0_weight (float, optional): Weight for the latent L0 loss. Only applied if greater than 0. Default is 0.0.
+        loss_covariance_weight (float, optional): Weight for the covariance loss. Only applied if greater than 0. Default is 0.0.
+        loss_auxk_weight (float, optional): Weight for the auxiliary TopK loss. Only used if a sparse (TopK) encoder is created; the auxiliary loss is always computed in that case, but contributes to the total loss only when this weight is non-zero. Default is 0.0.
+        regu_weight_l2 (float, optional): Weight for L2 regularization (applied via optimizer weight decay). Default is 0.0.
+        regu_weight_l1 (float, optional): Weight for L1 regularization. Only applied if greater than 0. Default is 0.0.
         learning_rate (float, optional): Learning rate for the optimizer. Default is 1e-3.
         patience (int, optional): Patience for the learning rate scheduler
         verbose (bool, optional): If True, prints additional information. Default is False.
@@ -105,21 +106,22 @@ class AutoEncoder(L.LightningModule):
 
     def __init__(self, 
             encoder_sizes:       list[int], 
-            encoder_sparse:          bool = False,
-            encoder_sparse_topk_k:    int = None,
+            encoder_sparse:            bool = False,
+            encoder_sparse_topk_k:      int = None,
+            encoder_sparse_batch_norm: bool = False,
             encoder_activation:    Literal["Identity", "JumpReLU", "LeakyReLU", "ReLU", "Tanh", "Sigmoid"] = "Identity",
-            decoder_sizes:      list[int] = None, 
+            decoder_sizes:        list[int] = None, 
             decoder_activation:    Literal["Identity", "JumpReLU", "LeakyReLU", "ReLU", "Tanh", "Sigmoid"] = "Identity", 
-            use_batch_norm:          bool = False,
-            loss_weight_latent_l0:  float = 0.0,
-            loss_weight_latent_l1:  float = 0.0,
-            loss_weight_covariance: float = 0.0,
-            loss_weight_auxk:       float = 0.0,
-            regu_weight_l2:         float = 0.0,
-            regu_weight_l1:         float = 0.0,
-            learning_rate:          float = 1e-3,
-            patience:                 int = 10,
-            verbose:                 bool = False
+            use_batch_norm:            bool = False,
+            loss_latent_l1_weight:    float = 0.0,
+            loss_latent_l0_weight:    float = 0.0,
+            loss_covariance_weight:   float = 0.0,
+            loss_auxk_weight:         float = 0.0,
+            regu_weight_l2:           float = 0.0,
+            regu_weight_l1:           float = 0.0,
+            learning_rate:            float = 1e-3,
+            patience:                   int = 10,
+            verbose:                   bool = False
             ) -> None:
         super(AutoEncoder, self).__init__()
 
@@ -127,14 +129,15 @@ class AutoEncoder(L.LightningModule):
         self.encoder_sizes = encoder_sizes
         self.encoder_sparse = encoder_sparse
         self.encoder_sparse_topk_k = encoder_sparse_topk_k
+        self.encoder_sparse_batch_norm = encoder_sparse_batch_norm
         self.encoder_activation_type = encoder_activation
         self.decoder_sizes = decoder_sizes
         self.decoder_activation_type = decoder_activation
         self.use_batch_norm = use_batch_norm
-        self.loss_weight_latent_l0 = loss_weight_latent_l0
-        self.loss_weight_latent_l1 = loss_weight_latent_l1
-        self.loss_weight_covariance = loss_weight_covariance
-        self.loss_weight_auxk = loss_weight_auxk
+        self.loss_latent_l1_weight = loss_latent_l1_weight
+        self.loss_latent_l0_weight = loss_latent_l0_weight
+        self.loss_covariance_weight = loss_covariance_weight
+        self.loss_auxk_weight = loss_auxk_weight
         self.regu_weight_l2 = regu_weight_l2
         self.regu_weight_l1 = regu_weight_l1
         self.learning_rate = learning_rate
@@ -150,9 +153,10 @@ class AutoEncoder(L.LightningModule):
         self.encoder_activation    = nn.Identity()
         # If specified, add TopK activation
         if self.encoder_sparse:
-            self.encoder_preactivation = nn.BatchNorm1d(self.encoder_sizes[-1])
-            # self.encoder_preactivation.weight.data.fill_(0.5)
-            self.encoder_preactivation.bias.data.fill_(1.0)
+            if self.encoder_sparse_batch_norm:
+                self.encoder_preactivation = nn.BatchNorm1d(self.encoder_sizes[-1])
+                # self.encoder_preactivation.weight.data.fill_(0.5)
+                self.encoder_preactivation.bias.data.fill_(1.0)
             # If not specified, use half of the output size
             if self.encoder_sparse_topk_k is None:
                 self.encoder_sparse_topk_k = math.floor(self.encoder_sizes[-1] / 2)
@@ -248,18 +252,21 @@ class AutoEncoder(L.LightningModule):
         self.log(f'{log_prefix}recon_loss', loss, on_step=False, on_epoch=True, prog_bar=True, logger=True)
 
         # Covariance loss
-        # crate centered embeddings
-        batch_size = embeddings.size(0)
-        embeddings_centered = embeddings - embeddings.mean(dim=0, keepdim=True)
-        # calculate ovariance matrix
-        cov_matrix = (embeddings_centered.T @ embeddings_centered) / (batch_size - 1)
-        # sum of squares of elements, excluding the diagonal
-        covariance_loss = (cov_matrix * (
-                1 - torch.eye(cov_matrix.size(0), device=embeddings.device))
-            ).abs().sum()
-        self.log(f'{log_prefix}covariance_loss', self.loss_weight_covariance * covariance_loss, on_step=False, on_epoch=True, prog_bar=True, logger=True)
-        loss += self.loss_weight_covariance * covariance_loss
+        if self.loss_covariance_weight > 0.0:
 
+            # crate centered embeddings
+            batch_size = embeddings.size(0)
+            embeddings_centered = embeddings - embeddings.mean(dim=0, keepdim=True)
+            # calculate ovariance matrix
+            cov_matrix = (embeddings_centered.T @ embeddings_centered) / (batch_size - 1)
+            # sum of squares of elements, excluding the diagonal
+            covariance_loss = (cov_matrix * (
+                    1 - torch.eye(cov_matrix.size(0), device=embeddings.device))
+                ).abs().sum()
+            self.log(f'{log_prefix}covariance_loss', self.loss_covariance_weight * covariance_loss, on_step=False, on_epoch=True, prog_bar=True, logger=True)
+            loss += self.loss_covariance_weight * covariance_loss
+
+        # Sparse encoder
         if self.encoder_sparse:
 
             # Track active neurons
@@ -279,18 +286,18 @@ class AutoEncoder(L.LightningModule):
             auxk_embeddings.scatter_(-1, auxk_embeddings_topk.indices, auxk_embeddings_topk.values)
             auxk_reconstruction = self.decode(auxk_embeddings)
             auxk_loss = topk_aux_loss(batch, emb_dead, auxk_reconstruction, reconstruction)
-            self.log(f'{log_prefix}auxk_loss', self.loss_weight_auxk * auxk_loss, on_step=False, on_epoch=True, prog_bar=True, logger=True)
-            loss += self.loss_weight_auxk * auxk_loss
+            self.log(f'{log_prefix}auxk_loss', self.loss_auxk_weight * auxk_loss, on_step=False, on_epoch=True, prog_bar=True, logger=True)
+            loss += self.loss_auxk_weight * auxk_loss
 
-            # Latent L0 or L1 loss
-            if self.decoder_activation_type == 'JumpReLU':
-                latent_l0_loss = normalized_L0_loss(embeddings)
-                self.log(f'{log_prefix}latent_l0_loss', self.loss_weight_latent_l0 * latent_l0_loss, on_step=False, on_epoch=True, prog_bar=True, logger=True)
-                loss += self.loss_weight_latent_l0 * latent_l0_loss
-            else:
-                latent_l1_loss = normalized_L1_loss(embeddings, batch)
-                self.log(f'{log_prefix}latent_l1_loss', self.loss_weight_latent_l1 * latent_l1_loss, on_step=False, on_epoch=True, prog_bar=True, logger=True)
-                loss += self.loss_weight_latent_l1 * latent_l1_loss
+        # Latent L0 and L1 loss
+        if self.loss_latent_l1_weight > 0.0:
+            latent_l1_loss = normalized_L1_loss(embeddings, batch)
+            self.log(f'{log_prefix}latent_l1_loss', self.loss_latent_l1_weight * latent_l1_loss, on_step=False, on_epoch=True, prog_bar=True, logger=True)
+            loss += self.loss_latent_l1_weight * latent_l1_loss
+        if self.loss_latent_l0_weight > 0.0:
+            latent_l0_loss = normalized_L0_loss(embeddings)
+            self.log(f'{log_prefix}latent_l0_loss', self.loss_latent_l0_weight * latent_l0_loss, on_step=False, on_epoch=True, prog_bar=True, logger=True)
+            loss += self.loss_latent_l0_weight * latent_l0_loss
         
         # L1 weight regularisation
         if self.regu_weight_l1 > 0.0:

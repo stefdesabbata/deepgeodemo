@@ -10,9 +10,8 @@ autoencoder:
   nickname:    'to4embk2_jumprelu'
   version:     '0_1'
   save_latent: 'csv'
-  max_epochs: 300
-  batch_size: 0.01
-  use_batch_norm: false
+  max_epochs:  100
+  batch_size:  0.01
   learning_rate:  1.0e-4
   encoder:
     sizes:
@@ -21,7 +20,7 @@ autoencoder:
     activation:   'JumpReLU'
     sparse:
       topk_k:     2
-    loss_weights:
-      latent_l0:  0.001
-      covariance: 0.001
-      auxk:       0.01
+      use_batch_norm: true
+  loss_weights:
+    latent_l0:    0.001
+    auxk:         0.01

@@ -161,35 +161,33 @@ def train_latent(geodemo_config, train_ae=True, create_latent=True, verbose=True
             print(f'Using computed sizes: {ae_encoder_sizes}', flush=True)
 
         # Other autoencoder parameters
-        if 'encoder' in                                 geodemo_config['autoencoder']:
-            if 'activation' in                          geodemo_config['autoencoder']['encoder']:
-                ae_args['encoder_activation']         = geodemo_config['autoencoder']['encoder']['activation']
-            if 'loss_weights' in                        geodemo_config['autoencoder']['encoder']:
-                if 'latent_l0' in                       geodemo_config['autoencoder']['encoder']['loss_weights']:
-                    ae_args['loss_weight_latent_l0']  = geodemo_config['autoencoder']['encoder']['loss_weights']['latent_l0']
-                if 'latent_l1' in                       geodemo_config['autoencoder']['encoder']['loss_weights']:
-                    ae_args['loss_weight_latent_l1']  = geodemo_config['autoencoder']['encoder']['loss_weights']['latent_l1']
-                if 'covariance' in                      geodemo_config['autoencoder']['encoder']['loss_weights']:
-                    ae_args['loss_weight_covariance'] = geodemo_config['autoencoder']['encoder']['loss_weights']['covariance']
-                if 'auxk' in                            geodemo_config['autoencoder']['encoder']['loss_weights']:
-                    ae_args['loss_weight_auxk']       = geodemo_config['autoencoder']['encoder']['loss_weights']['auxk']
-            if 'sparse' in                              geodemo_config['autoencoder']['encoder']:
-                ae_args['encoder_sparse']             = True
-                ae_args['encoder_sparse_topk_k']      = geodemo_config['autoencoder']['encoder']['sparse']['topk_k']
+        if 'encoder' in                                    geodemo_config['autoencoder']:
+            if 'activation' in                             geodemo_config['autoencoder']['encoder']:
+                ae_args['encoder_activation']            = geodemo_config['autoencoder']['encoder']['activation']
+            if 'sparse' in                                 geodemo_config['autoencoder']['encoder']:
+                ae_args['encoder_sparse']                = True
+                if 'topk_k' in                             geodemo_config['autoencoder']['encoder']['sparse']:
+                    ae_args['encoder_sparse_topk_k']     = geodemo_config['autoencoder']['encoder']['sparse']['topk_k']
+                if 'use_batch_norm' in                     geodemo_config['autoencoder']['encoder']['sparse']:
+                    ae_args['encoder_sparse_batch_norm'] = geodemo_config['autoencoder']['encoder']['sparse']['use_batch_norm']
 
-        # if 'dcc' in                                     geodemo_config['autoencoder']:
-        #     ae_args['dcc_from_epoch']                 = geodemo_config['autoencoder']['dcc']['from_epoch']
-        #     if 'neighbours' in                          geodemo_config['autoencoder']['dcc']:
-        #         ae_args['dcc_neighbours']             = geodemo_config['autoencoder']['dcc']['neighbours']
-        #     if 'nn_lambda' in                           geodemo_config['autoencoder']['dcc']:
-        #         ae_args['dcc_nn_lambda']              = geodemo_config['autoencoder']['dcc']['nn_lambda']
+        if 'decoder' in                             geodemo_config['autoencoder']:
+            if 'sizes' in                           geodemo_config['autoencoder']['decoder']:
+                ae_args['decoder_sizes']          = geodemo_config['autoencoder']['decoder']['sizes']
+                ae_args['decoder_sizes']          = ae_args['decoder_sizes'] + [data_tensor_ncol]
+            if 'activation' in                      geodemo_config['autoencoder']['decoder']:
+                ae_args['decoder_activation']     = geodemo_config['autoencoder']['decoder']['activation']
 
-        if 'decoder' in                                 geodemo_config['autoencoder']:
-            if 'sizes' in                               geodemo_config['autoencoder']['decoder']:
-                ae_args['decoder_sizes']              = geodemo_config['autoencoder']['decoder']['sizes']
-                ae_args['decoder_sizes']              = ae_args['decoder_sizes'] + [data_tensor_ncol]
-            if 'activation' in                          geodemo_config['autoencoder']['decoder']:
-                ae_args['decoder_activation']         = geodemo_config['autoencoder']['decoder']['activation']
+        if 'loss_weights' in                        geodemo_config['autoencoder']:
+            if 'latent_l1' in                       geodemo_config['autoencoder']['loss_weights']:
+                ae_args['loss_latent_l1_weight']  = geodemo_config['autoencoder']['loss_weights']['latent_l1']
+            if 'latent_l0' in                       geodemo_config['autoencoder']['loss_weights']:
+                ae_args['loss_latent_l0_weight']  = geodemo_config['autoencoder']['loss_weights']['latent_l0']
+            if 'covariance' in                      geodemo_config['autoencoder']['loss_weights']:
+                ae_args['loss_covariance_weight'] = geodemo_config['autoencoder']['loss_weights']['covariance']
+            if 'auxk' in                            geodemo_config['autoencoder']['loss_weights']:
+                if ae_args['encoder_sparse']:
+                    ae_args['loss_auxk_weight']   = geodemo_config['autoencoder']['loss_weights']['auxk']
 
         print(f'\n{ae_args=}\n', flush=True) if verbose else None
 
@@ -226,8 +224,10 @@ def train_latent(geodemo_config, train_ae=True, create_latent=True, verbose=True
         # Save model info
         model_str += str(geodemo_ae)
         model_str += f'\nuse_batch_norm = {geodemo_ae.use_batch_norm}'
-        model_str += f'\nloss_weight_latent_l1 = {geodemo_ae.loss_weight_latent_l1}'
-        model_str += f'\nloss_weight_covariance = {geodemo_ae.loss_weight_covariance}'
+        model_str += f'\nloss_latent_l1_weight = {geodemo_ae.loss_latent_l1_weight}'
+        model_str += f'\nloss_latent_l0_weight = {geodemo_ae.loss_latent_l0_weight}'
+        model_str += f'\nloss_covariance_weight = {geodemo_ae.loss_covariance_weight}'
+        model_str += f'\nloss_auxk_weight = {geodemo_ae.loss_auxk_weight}'
         model_str += f'\nregu_weight_l2 = {geodemo_ae.regu_weight_l2}'
         model_str += f'\nregu_weight_l1 = {geodemo_ae.regu_weight_l1}'
         model_str += f'\nlearning_rate = {geodemo_ae.learning_rate}'
