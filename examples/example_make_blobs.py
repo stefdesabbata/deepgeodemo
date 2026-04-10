@@ -33,11 +33,11 @@ sample_data_df = pd.DataFrame(
 sample_df = pd.concat([sample_labels_df, sample_data_df], axis=1)
 
 print(sample_df.head())
-sample_df.to_csv('example/example.csv', index=False)
+sample_df.to_csv('examples/example.csv', index=False)
 
 sns.pairplot(
     sample_df.drop(columns=['ID']),
     hue='CL',
     plot_kws={'s': 1}
     )
-plt.savefig('example/example_input.png')
+plt.savefig('examples/example_input.png')

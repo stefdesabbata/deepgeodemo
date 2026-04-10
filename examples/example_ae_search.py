@@ -5,7 +5,7 @@ from deepgeodemo import autoencoder_search
 ae_base = {
     'random_seed' : 20210321,
     'working_dir' : 'scratch',
-    'data: source'       : 'example/example.csv',
+    'data: source'       : 'examples/example.csv',
     'data: nickname'     : 'example_geodemo',
     'data: id_col'       : 'ID',
     'data: exclude_cols' : ['CL'],

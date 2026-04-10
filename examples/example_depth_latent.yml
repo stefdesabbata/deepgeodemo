@@ -1,5 +1,5 @@
 data:
-  source:    'example/example.csv'
+  source:    'examples/example.csv'
   nickname:  'example_geodemo'
   id_col:    'ID'
   exclude_cols:

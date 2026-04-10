@@ -1,5 +1,5 @@
 data:
-  source:    'example/example.csv'
+  source:    'examples/example.csv'
   nickname:  'example_geodemo'
   id_col:    'ID'
   exclude_cols:
@@ -7,7 +7,7 @@ data:
 working_dir: 'scratch'
 random_seed: 20210321
 autoencoder:
-  nickname:    'to4embk2_jumprelu'
+  nickname:    'to4embk2_relu'
   version:     '0_1'
   save_latent: 'csv'
   max_epochs:  100
@@ -17,7 +17,7 @@ autoencoder:
     sizes:
       - 8
       - 4
-    activation:   'JumpReLU'
+    activation:   'ReLU'
     sparse:
       topk_k:     2
       use_batch_norm: true

@@ -1,6 +1,6 @@
 # Configuration file
 
-DeepGeoDemo is configured via a single YAML file, passed as the last argument to the CLI. A minimal configuration only needs to specify the input data, an identifier, and a few settings for the clustering set, while everything else would falls back to default values. The full set of supported keys is documented below and illustrated by the configurations in the [`example/` directory of the repository](https://github.com/stefdesabbata/deepgeodemo/tree/main/example).
+DeepGeoDemo is configured via a single YAML file, passed as the last argument to the CLI. A minimal configuration only needs to specify the input data, an identifier, and a few settings for the clustering set, while everything else would falls back to default values. The full set of supported keys is documented below and illustrated by the configurations in the [`examples` directory of the repository](https://github.com/stefdesabbata/deepgeodemo/tree/main/examples).
 
 The top-level structure includes:
 
@@ -93,7 +93,7 @@ Search mode writes a clustergram, a WCSS (elbow) plot and a silhouette score plo
 
 ## Example configurations
 
-The [`example/` directory of the repository](https://github.com/stefdesabbata/deepgeodemo/tree/main/example) includes several ready-to-run configurations that exercise the options above:
+The [`examples` directory of the repository](https://github.com/stefdesabbata/deepgeodemo/tree/main/examples) includes several ready-to-run configurations that exercise the options above:
 
 - `example_minimal.yml`: smallest valid configuration, relying on the default `depth` and `latent` size.
 - `example.yml`: explicit encoder and decoder sizes.

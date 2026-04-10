@@ -32,42 +32,42 @@ pip install --extra-index-url=https://pypi.nvidia.com deepgeodemo[gpu]
 
 ## Usage
 
-The commands below illustrate how to use the Command-Line Interface (CLI) to run the tool using the example configuration file `example/example.yml` and data (eight random blobs in sixteen dimensions). The `-t` flag is used to train the autoencoder and `l` to create the latent representation. The `-s` flag is used to search for the best k. The `-c` flag is used to run clustering using k-means. If available, the cuml backend is used for clustering. The `-v` flag is optional and is used to display the progress of the process. 
+The commands below illustrate how to use the Command-Line Interface (CLI) to run the tool using the example configuration file `examples/example.yml` and data (eight random blobs in sixteen dimensions). The `-t` flag is used to train the autoencoder and `l` to create the latent representation. The `-s` flag is used to search for the best k. The `-c` flag is used to run clustering using k-means. If available, the cuml backend is used for clustering. The `-v` flag is optional and is used to display the progress of the process. 
 
 Train the autoencoder.
 
 ```bash
-deepgeodemo -tv example/example.yml
+deepgeodemo -tv examples/example.yml
 ```
 
 Create latent representation using on the previously trained autoencoder. Note that this will load a model from disk, and thus it will rais a warning message, as that can result in **arbitrary code execution**. Do it only if you got the file from a **trusted** source -- e.g., a model file you trained yourself, using the command above.
 
 ```bash
-deepgeodemo -lv example/example.yml
+deepgeodemo -lv examples/example.yml
 ```
 
 Alternatively, you can train the autoencoder and create the latent representation in one go. In this case, the autoencoder will still be saved, but the latent representation will be created directly with the model in memory (rather than loading from the disk).
 
 ```bash
-deepgeodemo -tlv example/example.yml
+deepgeodemo -tlv examples/example.yml
 ```
 
 Run clustering in test mode to search for best k. Add `-r` for RAPIDS backend, default is scikit-learn.
 
 ```bash
-deepgeodemo -sv example/example.yml
+deepgeodemo -sv examples/example.yml
 ```
 
 Run clustering using k-means. Add `-r` for RAPIDS backend, default is scikit-learn.
 
 ```bash
-deepgeodemo -cv example/example.yml
+deepgeodemo -cv examples/example.yml
 ```
 
 Alternatively, you can run everything in one go as well.
 
 ```bash
-deepgeodemo -tlscv example/example.yml
+deepgeodemo -tlscv examples/example.yml
 ```
 
 For a more concrete example, you can test the tool using the 2021 OAC data available from [Jakub Wyszomierski's repo](https://github.com/jakubwyszomierski/OAC2021-2). Download the [Clean data](https://liveuclac-my.sharepoint.com/:f:/g/personal/zcfajwy_ucl_ac_uk/Eqd1EV2WgOFJmZ7kLx-oDYMBdxqNe9IJmli6M8S-e91F0g?e=M9wh5j) used to create the [2021 OAC](https://data.cdrc.ac.uk/dataset/output-area-classification-2021), unzip the file and set the value of `data: source` to the location of one of the file datasets on your computer. It is advisable to normalise the data before training the autoencoder, e.g., using min-max scaling. Please increase the number of epochs and the number of clustering iteration to get meaninful results.
@@ -76,7 +76,7 @@ For a more concrete example, you can test the tool using the 2021 OAC data avail
 
 ## Configuration file
 
-DeepGeoDemo is configured via a single YAML file, passed as the last argument to the CLI. A minimal configuration only needs to specify the input data, an identifier, and a few settings for the clustering set, while everything else would falls back to default values. The full set of supported keys is documented below and illustrated by the configurations in [example/](example/).
+DeepGeoDemo is configured via a single YAML file, passed as the last argument to the CLI. A minimal configuration only needs to specify the input data, an identifier, and a few settings for the clustering set, while everything else would falls back to default values. The full set of supported keys is documented below and illustrated by the configurations in [examples](examples/).
 
 The top-level structure includes:
 
@@ -169,20 +169,20 @@ Search mode writes a clustergram, a WCSS (elbow) plot and a silhouette score plo
 
 ### Example configurations
 
-The [example/](example/) directory includes several ready-to-run configurations that exercise the options above:
+The [examples](examples/) directory includes several ready-to-run configurations that exercise the options above:
 
-- [example_minimal.yml](example/example_minimal.yml): smallest valid configuration, relying on the default `depth` and `latent` size.
-- [example.yml](example/example.yml): explicit encoder and decoder sizes.
-- [example_depth_latent.yml](example/example_depth_latent.yml): auto-generated layer sizes from `depth` and `latent`.
-- [example_with_validate.yml](example/example_with_validate.yml): enables a validation split.
-- [example_sparse_relu.yml](example/example_sparse_relu.yml): TopK sparse encoder with a ReLU base activation and latent L0 / auxk penalties.
-- [example_sparse_jumprelu.yml](example/example_sparse_jumprelu.yml): same as above, using JumpReLU as the base activation.
+- [example_minimal.yml](examples/example_minimal.yml): smallest valid configuration, relying on the default `depth` and `latent` size.
+- [example.yml](examples/example.yml): explicit encoder and decoder sizes.
+- [example_depth_latent.yml](examples/example_depth_latent.yml): auto-generated layer sizes from `depth` and `latent`.
+- [example_with_validate.yml](examples/example_with_validate.yml): enables a validation split.
+- [example_sparse_relu.yml](examples/example_sparse_relu.yml): TopK sparse encoder with a ReLU base activation and latent L0 / auxk penalties.
+- [example_sparse_jumprelu.yml](examples/example_sparse_jumprelu.yml): same as above, using JumpReLU as the base activation.
 
 
 
 ## Citation
 
-If you would like to cite this approach in your work, please reference the following paper (author accepted manuscript version available in the [papers/](papers/) folder):
+If you would like to cite this approach in your work, please reference the following paper (author accepted manuscript version available in the [`papers`](papers/) folder):
 
 ```bibtex
 @inproceedings{desabbata2019agile,
