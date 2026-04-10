@@ -1,4 +1,9 @@
 site_name: DeepGeoDemo
 site_url: https://deepgeodemo.readthedocs.io
 theme:
-  name: material
+  name: readthedocs
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Usage: usage.md
+  - Configuration: configuration.md

@@ -20,6 +20,8 @@ autoencoder:
     sizes:
       - 4
       - 8
+  loss_weights:
+    latent_l1: 0.01
 clustering:
   nickname:      'test'
   version:       '0_1'

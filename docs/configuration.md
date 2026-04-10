@@ -1,82 +1,6 @@
-# DeepGeoDemo: Deep Embedding Geodemographics Made Simple
+# Configuration file
 
-## Overview
-
-DeepGeoDemo makes it easy to build geodemographic classifications powered by deep embeddings. Configure your autoencoder in a simple YAML file and run the full pipeline from the command line, or import DeepGeoDemo as a Python library when you need more control.
-
-
-
-## Installation
-
-The package is currently under development and can be installed from the repository. The package requires Python 3.12. The package can be installed using the following commands. This will install the package with the CPU dependencies --- i.e., the cpu version of [PyTorch](https://pytorch.org/) and [scikit-learn](https://scikit-learn.org/stable/index.html) for clustering.
-
-Create a virtual environment, e.g. using conda.
-
-```bash
-conda create -n deepgeodemo python=3.12
-conda activate deepgeodemo
-```
-
-Install the package via `pip`.
-
-```bash
-pip install deepgeodemo
-```
-
-Alternatively, the package can be installed with the GPU dependencies if available and [RAPIDS](https://docs.rapids.ai/) for the clustering.
-
-```bash
-pip install --extra-index-url=https://pypi.nvidia.com deepgeodemo[gpu]
-```
-
-
-## Usage
-
-The commands below illustrate how to use the Command-Line Interface (CLI) to run the tool using the example configuration file `example/example.yml` and data (eight random blobs in sixteen dimensions). The `-t` flag is used to train the autoencoder and `l` to create the latent representation. The `-s` flag is used to search for the best k. The `-c` flag is used to run clustering using k-means. If available, the cuml backend is used for clustering. The `-v` flag is optional and is used to display the progress of the process. 
-
-Train the autoencoder.
-
-```bash
-deepgeodemo -tv example/example.yml
-```
-
-Create latent representation using on the previously trained autoencoder. Note that this will load a model from disk, and thus it will rais a warning message, as that can result in **arbitrary code execution**. Do it only if you got the file from a **trusted** source -- e.g., a model file you trained yourself, using the command above.
-
-```bash
-deepgeodemo -lv example/example.yml
-```
-
-Alternatively, you can train the autoencoder and create the latent representation in one go. In this case, the autoencoder will still be saved, but the latent representation will be created directly with the model in memory (rather than loading from the disk).
-
-```bash
-deepgeodemo -tlv example/example.yml
-```
-
-Run clustering in test mode to search for best k. Add `-r` for RAPIDS backend, default is scikit-learn.
-
-```bash
-deepgeodemo -sv example/example.yml
-```
-
-Run clustering using k-means. Add `-r` for RAPIDS backend, default is scikit-learn.
-
-```bash
-deepgeodemo -cv example/example.yml
-```
-
-Alternatively, you can run everything in one go as well.
-
-```bash
-deepgeodemo -tlscv example/example.yml
-```
-
-For a more concrete example, you can test the tool using the 2021 OAC data available from [Jakub Wyszomierski's repo](https://github.com/jakubwyszomierski/OAC2021-2). Download the [Clean data](https://liveuclac-my.sharepoint.com/:f:/g/personal/zcfajwy_ucl_ac_uk/Eqd1EV2WgOFJmZ7kLx-oDYMBdxqNe9IJmli6M8S-e91F0g?e=M9wh5j) used to create the [2021 OAC](https://data.cdrc.ac.uk/dataset/output-area-classification-2021), unzip the file and set the value of `data: source` to the location of one of the file datasets on your computer. It is advisable to normalise the data before training the autoencoder, e.g., using min-max scaling. Please increase the number of epochs and the number of clustering iteration to get meaninful results.
-
-
-
-## Configuration file
-
-DeepGeoDemo is configured via a single YAML file, passed as the last argument to the CLI. A minimal configuration only needs to specify the input data, an identifier, and a few settings for the clustering set, while everything else would falls back to default values. The full set of supported keys is documented below and illustrated by the configurations in [example/](example/).
+DeepGeoDemo is configured via a single YAML file, passed as the last argument to the CLI. A minimal configuration only needs to specify the input data, an identifier, and a few settings for the clustering set, while everything else would falls back to default values. The full set of supported keys is documented below and illustrated by the configurations in the `example/` directory of the repository.
 
 The top-level structure includes:
 
@@ -86,7 +10,7 @@ The top-level structure includes:
 - `autoencoder`: architecture, training and loss options (see below).
 - `clustering`: k-means search and clustering options (see below).
 
-### `data`
+## `data`
 
 | Key | Type | Description |
 | --- | --- | --- |
@@ -95,11 +19,11 @@ The top-level structure includes:
 | `id_col` | string | Name of the column that uniquely identifies each row. Carried through to the latent and cluster outputs. |
 | `exclude_cols` | list of strings | Optional. Columns to carry through to the outputs but exclude from training and clustering (e.g. an existing classification label). |
 
-### `autoencoder`
+## `autoencoder`
 
 This section controls both the architecture of the autoencoder and how it is trained.
 
-**Identifiers and outputs**
+### Identifiers and outputs
 
 | Key | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -107,7 +31,7 @@ This section controls both the architecture of the autoencoder and how it is tra
 | `version` | string |  | Version tag appended to the output file names (e.g. `0_1`). |
 | `save_latent` | `csv` or `parquet` | `csv` | Format used to save the latent representation. |
 
-**Training**
+### Training
 
 | Key | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -121,7 +45,7 @@ This section controls both the architecture of the autoencoder and how it is tra
 | `regu_weight_l2` | float | `0.0` | L2 weight decay applied through AdamW. |
 | `regu_weight_l1` | float | `0.0` | L1 regularisation on all model weights. Only applied if `> 0`. |
 
-**Architecture**
+### Architecture
 
 The encoder layer sizes can be specified explicitly through `encoder.sizes`, or generated automatically from a target `depth` and `latent` size. The input layer size is inferred from the data (after dropping `id_col` and `exclude_cols`), so it should not be included in `sizes`. If `decoder.sizes` is omitted, the decoder defaults to the reverse of the encoder. The `LeakyReLU` activation is used after each layer, except for the last layer of both the encoder and the decoder, where the default is `Identity` but a different activation can be specified using `encoder.activation` and `decoder.activation`.
 
@@ -137,7 +61,7 @@ The encoder layer sizes can be specified explicitly through `encoder.sizes`, or 
 | `decoder.sizes` | list of int | reverse of encoder | Explicit sizes of the decoder hidden layers (the output dimension is inferred from the data and appended automatically). |
 | `decoder.activation` | string | `Identity` | Final activation for the decoder. Same options as `encoder.activation`. |
 
-**Loss weights**
+### Loss weights
 
 All loss weights default to `0.0` and are only added to the total loss when set above zero. The reconstruction loss (normalised MSE) is always applied.
 
@@ -148,7 +72,7 @@ All loss weights default to `0.0` and are only added to the total loss when set 
 | `loss_weights.covariance` | float | Weight for a covariance penalty that discourages correlated latent dimensions. |
 | `loss_weights.auxk` | float | Weight for the auxiliary TopK loss that mitigates dead neurons. Only used when `encoder.sparse` is set. |
 
-### `clustering`
+## `clustering`
 
 K-means clustering runs on the latent embeddings produced by the autoencoder. Two modes are supported: **search** (`-s`), which tries a range of values of k and writes diagnostic plots, and **cluster** (`-c`), which fits and saves one or more chosen values of k. A single configuration file can declare both.
 
@@ -167,39 +91,13 @@ K-means clustering runs on the latent embeddings produced by the autoencoder. Tw
 
 Search mode writes a clustergram, a WCSS (elbow) plot and a silhouette score plot into `working_dir`; cluster mode writes one column of labels per value of k in `cluster.k`.
 
-### Example configurations
+## Example configurations
 
-The [example/](example/) directory ships several ready-to-run configurations that exercise the options above:
+The `example/` directory of the repository ships several ready-to-run configurations that exercise the options above:
 
-- [example_minimal.yml](example/example_minimal.yml): smallest valid configuration, relying on the default `depth` and `latent` size.
-- [example.yml](example/example.yml): explicit encoder and decoder sizes.
-- [example_depth_latent.yml](example/example_depth_latent.yml): auto-generated layer sizes from `depth` and `latent`.
-- [example_with_validate.yml](example/example_with_validate.yml): enables a validation split.
-- [example_sparse_relu.yml](example/example_sparse_relu.yml): TopK sparse encoder with a ReLU base activation and latent L0 / auxk penalties.
-- [example_sparse_jumprelu.yml](example/example_sparse_jumprelu.yml): same as above, using JumpReLU as the base activation.
-
-
-
-## Unit Tests
-
-If you want to run the unit tests, you can install the package in editable mode.
-
-```bash
-# Clone the repository
-gh repo clone stefdesabbata/deepgeodemo
-cd deepgeodemo
-
-# Install the package
-pip install -e .
-```
-
-Then run the tests.
-
-```bash
-python -m pytest tests/ -v
-```
-
-
-## Acknowledgement
-
-Many thanks to [Owen Goodwin](https://github.com/ogoodwin505), [Pengyuan Liu](https://github.com/PengyuanLiu1993) and [Alex Singleton](https://github.com/alexsingleton) for their collaboration on this project and for testing the pre-alpha versions of the tool.
+- `example_minimal.yml`: smallest valid configuration, relying on the default `depth` and `latent` size.
+- `example.yml`: explicit encoder and decoder sizes.
+- `example_depth_latent.yml`: auto-generated layer sizes from `depth` and `latent`.
+- `example_with_validate.yml`: enables a validation split.
+- `example_sparse_relu.yml`: TopK sparse encoder with a ReLU base activation and latent L0 / auxk penalties.
+- `example_sparse_jumprelu.yml`: same as above, using JumpReLU as the base activation.
