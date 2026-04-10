@@ -185,7 +185,7 @@ The [example/](example/) directory includes several ready-to-run configurations 
 If you would like to cite this approach in your work, please reference the following paper (author accepted manuscript version available in the [papers/](papers/) folder):
 
 ```bibtex
-@inproceedings{desabbata2019deepgeodemo,
+@inproceedings{desabbata2019agile,
   author    = {De Sabbata, Stef and Liu, Pengyuan},
   title     = {Deep learning geodemographics with autoencoders and geographic convolution},
   booktitle = {Accepted Short Papers and Posters from the 22nd {AGILE} Conference on Geo-information Science},
