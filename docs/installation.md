@@ -1,6 +1,6 @@
 # Installation
 
-The package is currently under development and can be installed from the repository. The package requires Python 3.12. The package can be installed using the following commands. This will install the package with the CPU dependencies --- i.e., the cpu version of [PyTorch](https://pytorch.org/) and [scikit-learn](https://scikit-learn.org/stable/index.html) for clustering.
+The package requires Python 3.12. The package can be installed using the following commands. This will install the package with the CPU dependencies, i.e., the cpu version of [PyTorch](https://pytorch.org/) and [scikit-learn](https://scikit-learn.org/stable/index.html) for clustering.
 
 Create a virtual environment, e.g. using conda.
 
@@ -9,7 +9,7 @@ conda create -n deepgeodemo python=3.12
 conda activate deepgeodemo
 ```
 
-Install the package via `pip`.
+Install the [deepgeodemo package](https://pypi.org/project/deepgeodemo/) via `pip`.
 
 ```bash
 pip install deepgeodemo

@@ -2,13 +2,13 @@
 
 ## Overview
 
-DeepGeoDemo makes it easy to build geodemographic classifications powered by deep embeddings. Configure your autoencoder in a simple YAML file and run the full pipeline from the command line, or import DeepGeoDemo as a Python library when you need more control.
+[DeepGeoDemo](https://deepgeodemo.readthedocs.io/en/latest/) makes it easy to build geodemographic classifications powered by deep embeddings. Configure your autoencoder in a simple YAML file and run the full pipeline from the command line, or import DeepGeoDemo as a Python library when you need more control.
 
 
 
 ## Installation
 
-The package is currently under development and can be installed from the repository. The package requires Python 3.12. The package can be installed using the following commands. This will install the package with the CPU dependencies --- i.e., the cpu version of [PyTorch](https://pytorch.org/) and [scikit-learn](https://scikit-learn.org/stable/index.html) for clustering.
+The package requires Python 3.12. The package can be installed using the following commands. This will install the package with the CPU dependencies, i.e., the cpu version of [PyTorch](https://pytorch.org/) and [scikit-learn](https://scikit-learn.org/stable/index.html) for clustering.
 
 Create a virtual environment, e.g. using conda.
 
@@ -17,7 +17,7 @@ conda create -n deepgeodemo python=3.12
 conda activate deepgeodemo
 ```
 
-Install the package via `pip`.
+Install the [deepgeodemo package](https://pypi.org/project/deepgeodemo/) via `pip`.
 
 ```bash
 pip install deepgeodemo
@@ -169,7 +169,7 @@ Search mode writes a clustergram, a WCSS (elbow) plot and a silhouette score plo
 
 ### Example configurations
 
-The [example/](example/) directory ships several ready-to-run configurations that exercise the options above:
+The [example/](example/) directory includes several ready-to-run configurations that exercise the options above:
 
 - [example_minimal.yml](example/example_minimal.yml): smallest valid configuration, relying on the default `depth` and `latent` size.
 - [example.yml](example/example.yml): explicit encoder and decoder sizes.

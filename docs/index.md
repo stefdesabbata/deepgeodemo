@@ -2,7 +2,13 @@
 
 ## Overview
 
-DeepGeoDemo makes it easy to build geodemographic classifications powered by deep embeddings. Configure your autoencoder in a simple YAML file and run the full pipeline from the command line, or import DeepGeoDemo as a Python library when you need more control.
+[DeepGeoDemo](https://github.com/stefdesabbata/deepgeodemo) makes it easy to build geodemographic classifications powered by deep embeddings. Configure your autoencoder in a simple YAML file and run the full pipeline from the command line, or import DeepGeoDemo as a Python library when you need more control.
+
+You can install the [deepgeodemo package](https://pypi.org/project/deepgeodemo/) via `pip`. See the installation page for more details.
+
+```bash
+pip install deepgeodemo
+```
 
 
 ## Acknowledgement
