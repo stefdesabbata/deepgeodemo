@@ -198,6 +198,8 @@ If you would like to cite this approach in your work, please reference the follo
 }
 ```
 
+In a more recent paper ([De Sabbata and Liu, 2023](https://doi.org/10.1080/13658816.2023.2254382)), we provide a more detailed discussion of the background and motivation, including the use of graph neural networks (hopefully coming soon to this tool). [Singleton and Spielman (2026)](https://doi.org/10.1016/j.compenvurbsys.2025.102396) also provided a review and future directions for learned representations in geodemographics, including how deep autoencoder approaches fit within the history of field.
+
 
 ## Acknowledgement
 
