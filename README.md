@@ -180,23 +180,22 @@ The [example/](example/) directory includes several ready-to-run configurations 
 
 
 
-## Unit Tests
+## Citation
 
-If you want to run the unit tests, you can install the package in editable mode.
+If you would like to cite this approach in your work, please reference the following paper (author accepted manuscript version available in the [papers/](papers/) folder):
 
-```bash
-# Clone the repository
-gh repo clone stefdesabbata/deepgeodemo
-cd deepgeodemo
-
-# Install the package
-pip install -e .
-```
-
-Then run the tests.
-
-```bash
-python -m pytest tests/ -v
+```bibtex
+@inproceedings{desabbata2019deepgeodemo,
+  author    = {De Sabbata, Stef and Liu, Pengyuan},
+  title     = {Deep learning geodemographics with autoencoders and geographic convolution},
+  booktitle = {Accepted Short Papers and Posters from the 22nd {AGILE} Conference on Geo-information Science},
+  editor    = {Kyriakidis, Phaedon and Hadjimitsis, Diofantos and Skarlatos, Dimitrios and Mansourian, Ali},
+  year      = {2019},
+  month     = {June},
+  address   = {Limassol, Cyprus},
+  publisher = {Stichting AGILE},
+  isbn      = {978-90-816960-9-8}
+}
 ```
 
 
