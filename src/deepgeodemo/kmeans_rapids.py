@@ -8,13 +8,9 @@ import cudf
 from cuml.cluster import KMeans
 
 
-def main(config, verbose):
+def cluster(geodemo_config, verbose):
 
     # Configuration -----------------------------------------------------------
-
-    with open(config, 'r') as file:
-        geodemo_config = yaml.safe_load(file)
-    print(f'{geodemo_config=}') if verbose else None
 
     if 'random_seed' in geodemo_config:
         random_seed       = geodemo_config['random_seed']
@@ -104,6 +100,22 @@ def main(config, verbose):
     else:
         print('No save format specified, saving as CSV') if verbose else None
         pd.concat(parts, axis=1).to_csv(clust_output_csv, index=False)
+
+
+
+# Main --------------------------------------------------------------------
+
+def main(config, verbose):
+
+    # Configuration -----------------------------------------------------------
+
+    with open(config, 'r') as file:
+        geodemo_config = yaml.safe_load(file)
+    print(f'{geodemo_config=}') if verbose else None
+
+    # Clustering --------------------------------------------------------------
+
+    cluster(geodemo_config, verbose)
 
 
 

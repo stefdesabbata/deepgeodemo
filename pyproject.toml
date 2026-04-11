@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "deepgeodemo"
-version = "0.1.5"
+version = "0.1.6"
 description = "A library and CLI tool for geodemographic classification using deep autoencoders."
 keywords = ["geodemographic", "geodemographics", "autoencoders"]
 readme = "README.md"

@@ -12,13 +12,9 @@ from cuml.metrics.cluster import silhouette_score
 from clustergram import Clustergram
 
 
-def main(config, verbose):
+def search(geodemo_config, verbose):
 
     # Configuration -----------------------------------------------------------
-
-    with open(config, 'r') as file:
-        geodemo_config = yaml.safe_load(file)
-    print(f'{geodemo_config=}') if verbose else None
 
     if 'random_seed' in geodemo_config:
         random_seed       = geodemo_config['random_seed']
@@ -131,6 +127,22 @@ def main(config, verbose):
     plt.xticks(clust_k_to_test)
     plt.savefig(plot_silh_path, bbox_inches="tight")
     plt.close()
+
+
+
+# Main --------------------------------------------------------------------
+
+def main(config, verbose):
+
+    # Configuration -----------------------------------------------------------
+
+    with open(config, 'r') as file:
+        geodemo_config = yaml.safe_load(file)
+    print(f'{geodemo_config=}') if verbose else None
+
+    # Search ------------------------------------------------------------------
+
+    search(geodemo_config, verbose)
 
 
 
