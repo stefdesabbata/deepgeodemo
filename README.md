@@ -17,9 +17,10 @@ conda create -n deepgeodemo python=3.12
 conda activate deepgeodemo
 ```
 
-Install the [deepgeodemo package](https://pypi.org/project/deepgeodemo/) via `pip`.
+Install the [deepgeodemo package](https://pypi.org/project/deepgeodemo/) via `pip`. You might want to pre-install PyTorch using the CPU-only wheel to avoid unnecessary dependencies being downloaded.
 
 ```bash
+pip install torch --index-url https://download.pytorch.org/whl/cpu
 pip install deepgeodemo
 ```
 
